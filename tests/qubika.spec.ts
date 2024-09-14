@@ -69,7 +69,8 @@ import UICategories from "../POM/UI/categories"
           });
           await test.step('fill a Name category', async()=>{
             await uICategories.fillNameCategory(nameCategory)
-            await expect(uICategories.addCategoryTypeHeader).toHaveValue(nameCategory);  
+            await page.pause()
+            await expect(uICategories.nameCategory).toHaveValue(nameCategory)
           });
           await test.step('Try saving the category', async()=>{
             await uICategories.clickCancelCreatingACategory()
@@ -84,10 +85,10 @@ import UICategories from "../POM/UI/categories"
           });
           await test.step('fill a Name category', async()=>{
             await uICategories.fillNameCategory(nameCategory)
-            await expect(uICategories.addCategoryTypeHeader).toHaveValue(nameCategory);  
+            await expect(uICategories.nameCategory).toHaveValue(nameCategory);  
           });
           await test.step('save the category', async()=>{
-            await uICategories.clickAcceptCategory(nameCategory)
+            await uICategories.clickAcceptCategory()
             await expect(uICategories.categoryTypeAddedPopUP).toBeVisible();  
           });
         })

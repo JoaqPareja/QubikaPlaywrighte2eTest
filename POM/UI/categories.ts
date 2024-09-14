@@ -33,10 +33,10 @@ export default class UICategories{
         await this.nameCategory.click();
         await this.nameCategory.fill(nameCategory);
     }
-    public async clickAcceptCategory(nameCategory:string){
+    public async clickAcceptCategory(){
         await this.page.waitForTimeout(500);//emulate user behavior 
-        await this.nameCategory.click();
-        await this.nameCategory.fill(nameCategory);
+        await this.acceptButtonCategory.click();
+        await this.page.waitForTimeout(500);//emulate user behavior 
     }
     public async clickCancelCreatingACategory(){
         await this.page.waitForTimeout(500);//emulate user behavior 
