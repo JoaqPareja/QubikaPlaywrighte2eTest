@@ -35,29 +35,26 @@ export default class UILogin{
         await this.page.waitForLoadState('load')
         await this.page.waitForTimeout(1000);//emulate user behavior 
     }
-    private async authLogin(){
+    public async authLogin(){
         const authResponsePromise =  await this.page.waitForResponse(/.*login$/);
         const AUTH_RESPONSE =  authResponsePromise
         return AUTH_RESPONSE;
     }
-    private async checkAccountResponse(){
+    public async checkAccountResponse(){
         const authResponsePromise =  await this.page.waitForResponse(/.*account$/);
         const AUTH_RESPONSE =  authResponsePromise
         return AUTH_RESPONSE;
     }
     public async clickOnAuthenticateButton(){
+        await this.page.waitForTimeout(1000);//emulate user behavior 
         await this.authenticateButton.click();
         await this.page.waitForLoadState('load')
-        await this.page.waitForTimeout(1000);//emulate user behavior 
     }
     public async clickOnAuthenticateButtonAndCheckAPINetworkResponses(){
         await this.page.waitForTimeout(1000);//emulate user behavior 
         await this.authenticateButton.click({force:true});
         await this.page.waitForLoadState('load')
-        const AUTH_RESPONSE = await this.authLogin();
-        const ACC_RESPONSE= await this.checkAccountResponse();
-        expect(AUTH_RESPONSE.status()).toBe(200);
-        expect(ACC_RESPONSE.status()).toBe(200)
+
     }
      public async clickOnRembemberMe(){
         await this.page.waitForTimeout(1000);//emulate user behavior 

@@ -5,7 +5,8 @@ import UISideMenu from "../POM/UI/sideMenu"
 import UICategories from "../POM/UI/categories"
 import APILogin from "../POM/API/login"
 import APICategories from "../POM/API/categories"
-
+import APIRegister from "../POM/API/register"
+import {registerANewUser} from "../helpers/registerANewUser"
 test.use({video: 'on'});
   test.setTimeout(140000);
 
@@ -14,7 +15,8 @@ test.use({video: 'on'});
       const uISideMenu =new UISideMenu(page)
       const uICategories =new UICategories(page);
       const aPILogin= new APILogin(page)
-      const aPICategories= new APICategories(page)
+      const aPICategories= new APICategories(page);
+      const aPIRegister=new APIRegister(page)
       await test.step('API test', async ()=>{
           
         await test.step('Check that we can not log in with a wrong email a password', async ()=>{
@@ -98,19 +100,21 @@ test.use({video: 'on'});
               const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
               expect(getCategoryByIDReponse.status()).toBe(404);
             });
-            await page.pause()
+
           });
 
         });
         
       })
       await test.step('UI test', async ()=>{
+
         await test.step('get to the Log in page and check that we landed in the right page', async ()=>{
           await page.goto('/');
           await expect(page).toHaveURL(/.*club-administration.qa.qubika.com/)
           await expect(page).toHaveURL(/.login/)
           await page.waitForTimeout(300);
         })
+
         await test.step('Check message for an incorrect email and password', async()=>{
           await test.step('type Incorrectly user email', async ()=>{
             await uILogin.fillUserName(emailNotRegistered)
@@ -126,7 +130,43 @@ test.use({video: 'on'});
             await expect(uILogin.popUpWrongUsernameOrPasswrod).toBeVisible();
           })
         })
-        await test.step('Type correct credentials', async()=>{
+        await test.step('Register user and log in the UI', async ()=>{
+          await test.step('create a user from the API Level and check it can log in in the UI', async ()=>{
+            const apareRegisterUser= await aPIRegister.registerUSer(await registerANewUser() ,passwordNotRegistered)
+            const getCategoryByIDReponseJson = await apareRegisterUser.json()
+            expect(apareRegisterUser.ok()).toBeTruthy();
+            expect(apareRegisterUser.status()).toBe(201)
+            expect(getCategoryByIDReponseJson.email).toEqual(process.env.NEWUSER)
+          })
+          await test.step('type user email', async ()=>{
+            await uILogin.fillUserName(`${process.env.NEWUSER}`)
+            await expect(uILogin.userEmailLocator).toHaveValue(`${process.env.NEWUSER}`) // Why toHaveValue instead of toHaveText ? because the input saves it as value and not as as text
+            await uILogin.jumpToPasswordFromUserName();
+          })
+          await test.step('type user password', async ()=>{
+            await uILogin.fillUserPassword(passwordNotRegistered)
+            await expect(uILogin.userPasswordLocator).toHaveValue(passwordNotRegistered)
+          })
+          await test.step('Click on the authenticate button', async()=>{
+            await uILogin.clickOnAuthenticateButton();
+            const AUTH_RESPONSE = await uILogin.authLogin();
+            const ACC_RESPONSE= await uILogin.checkAccountResponse();
+            expect(AUTH_RESPONSE.status()).toBe(200);
+            expect(ACC_RESPONSE.status()).toBe(200)
+          })
+          await test.step('Check we landed on the dashboard', async()=>{
+            await expect(page).toHaveURL(/.*dashboard/)
+            await page.waitForTimeout(300);//emulate user behavior
+            await expect(uISideMenu.qubikaBrandIcon).toBeVisible();
+            await page.waitForTimeout(300);//emulate user behavior
+          });
+          await test.step('go back to the log user scren', async ()=>{
+            await page.goBack(); //Here i will click on the log out button but for some reason when opening the chromium it does not exist the element
+          })
+
+        })
+
+        await test.step('Log in with Qubika Admin User', async()=>{
           await test.step('type user email', async ()=>{
             await uILogin.fillUserName(email)
             await expect(uILogin.userEmailLocator).toHaveValue(email) // Why toHaveValue instead of toHaveText ? because the input saves it as value and not as as text
@@ -142,7 +182,11 @@ test.use({video: 'on'});
             await expect(uILogin.inputRadio).toHaveCSS('background-color',colorBackGroundToExpect)
           })
           await test.step('Click on the authenticate button', async()=>{
-            await uILogin.clickOnAuthenticateButtonAndCheckAPINetworkResponses();
+            await uILogin.clickOnAuthenticateButton();
+            const AUTH_RESPONSE = await uILogin.authLogin();
+            const ACC_RESPONSE= await uILogin.checkAccountResponse();
+            expect(AUTH_RESPONSE.status()).toBe(200);
+            expect(ACC_RESPONSE.status()).toBe(200)
           })
           await test.step('Check we landed on the dashboard', async()=>{
             await expect(page).toHaveURL(/.*dashboard/)
