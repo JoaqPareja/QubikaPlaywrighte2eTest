@@ -162,6 +162,8 @@ test.use({video: 'on'});
           });
           await test.step('go back to the log user scren', async ()=>{
             await page.goBack(); //Here i will click on the log out button but for some reason when opening the chromium it does not exist the element
+            await expect(page).toHaveURL(/.login/) //Assert we landed on the login 
+            await page.waitForTimeout(300);
           })
 
         })
