@@ -1,6 +1,7 @@
 The project consist in testing the internal project of Qubika, both API and UI tests are to be run in just one file as per the requirments.
 
 UI URL:https://api.club-administration.qa.qubika.com/swagger-ui/index.html#/
+
 Swagger URL:https://club-administration.qa.qubika.com/#/category-type
 
 This project is divided in two parts, in the first part we are doing the tests on the API Level and if those pass we move on to the UI level, in both instances we try to cover as much as tests as possible, we'll see that in the test file all the tests or "sub" tests are divided in steps with this is much more clear to debug the issues found and also is much more clear to view it in the html report after the run.
