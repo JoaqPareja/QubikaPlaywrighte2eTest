@@ -7,12 +7,16 @@ export default class UILogin{
     public readonly popUpWrongUsernameOrPasswrod: Locator;
     public readonly authenticateButton: Locator;
     public readonly qubikaBrandIcon: Locator;
+    public readonly rememberMe: Locator;
+    public readonly inputRadio: Locator;
     constructor(private page:Page){
         this.page = page;
         this.userEmailLocator=this.page.getByPlaceholder('Usuario o correo electrónico');
         this.userPasswordLocator=this.page.getByPlaceholder('Contraseña');
         this.popUpWrongUsernameOrPasswrod= this.page.getByLabel('Usuario o contraseña incorrectos');
         this.authenticateButton=this.page.getByRole('button', { name: 'Autenticar' });
+        this.rememberMe = this.page.locator('div').filter({ hasText: /^Recordarme$/ })
+        this.inputRadio= this.page.locator('.custom-control-input');
 
     }
     public async fillUserName(email:string){
@@ -55,6 +59,9 @@ export default class UILogin{
         expect(AUTH_RESPONSE.status()).toBe(200);
         expect(ACC_RESPONSE.status()).toBe(200)
     }
-     
+     public async clickOnRembemberMe(){
+        await this.page.waitForTimeout(1000);//emulate user behavior 
+        await this.rememberMe.click();
+     }
 
 }

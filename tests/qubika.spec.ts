@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test } from '../customTypes/user';
+import { test } from '../customTypes/testData';
 import UILogin from "../POM/UI/login"
 import UISideMenu from "../POM/UI/sideMenu"
 import UICategories from "../POM/UI/categories"
@@ -7,7 +7,7 @@ import UICategories from "../POM/UI/categories"
 test.use({video: 'on'});
   test.setTimeout(140000);
 
-    test('Qubika test', async ({ page,email,password, emailNotRegistered,passwordNotRegistered,nameCategory}) => {
+    test('Qubika test', async ({ page,email,password, emailNotRegistered,passwordNotRegistered,nameCategory,colorBackGroundToExpect}) => {
       const uILogin = new UILogin(page)
       const uISideMenu =new UISideMenu(page)
       const uICategories =new UICategories(page)
@@ -46,10 +46,9 @@ test.use({video: 'on'});
             await expect(uILogin.userPasswordLocator).toHaveValue(password)
           })
           await test.step('Remember me step',async()=>{
-            const rememberMe = page.locator('div').filter({ hasText: /^Recordarme$/ })
-            await rememberMe.click();
-            const inputRadio= page.locator('.custom-control-input');
-            await expect(inputRadio).toHaveCSS('background-color',"rgba(0, 0, 0, 0)")
+            await uILogin.clickOnRembemberMe();
+            await uILogin.clickOnRembemberMe();
+            await expect(uILogin.inputRadio).toHaveCSS('background-color',colorBackGroundToExpect)
           })
           await test.step('Click on the authenticate button', async()=>{
             await uILogin.clickOnAuthenticateButtonAndCheckAPINetworkResponses();
@@ -107,13 +106,12 @@ test.use({video: 'on'});
             await expect(uICategories.nameCategory).toHaveValue(nameCategory);  
           });
           await test.step('click on the subcategory option', async()=>{
-            await page.locator('label').filter({ hasText: 'Es subcategoria?' }).click();
-            const subcategoryRadioInput= page.locator('#customCheckMain')
-            await expect(subcategoryRadioInput).toHaveCSS('background-color',"rgba(0, 0, 0, 0)")
+            await uICategories.clickIsItASubcategoryButton()
+            await expect(uICategories.subcategoryRadioInput).toHaveCSS('background-color',colorBackGroundToExpect)
           });
           await test.step('Select the father category', async()=>{
-            await page.locator('div').filter({ hasText: /^Seleccione la categoría padre$/ }).nth(2).click();
-            await page.getByRole('option').first().click();//Explicar porque se elige el primer input no mas 
+            await uICategories.clickSelectFatherCategory()
+            await uICategories.clickOnFirstCategoryOption();//Here we will be clicking on the first category as there is no option in the app to look for the one recently created
           });
           await test.step('save the category', async()=>{
             await uICategories.clickAcceptCategory()
@@ -124,7 +122,7 @@ test.use({video: 'on'});
 
         })
 
-        await page.pause()
+        // await page.pause()
 
 
       //   await test.step('Check that we landed on the Log in page', async ()=>{

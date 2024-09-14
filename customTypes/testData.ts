@@ -5,7 +5,8 @@ export type TestOptions = {
   password:string;
   emailNotRegistered:string;
   passwordNotRegistered:string;
-  nameCategory:string
+  nameCategory:string;
+  colorBackGroundToExpect:string;
 };
 export const test = base.extend<TestOptions>({
   // Define an option and provide a default value.
@@ -15,4 +16,5 @@ export const test = base.extend<TestOptions>({
   emailNotRegistered:[`${process.env.EMAIL_NOT_REGISTERED}`, { option: true }],
   passwordNotRegistered:[`${process.env.PASSWORD_NOT_REGISTERED}`, { option: true }],
   nameCategory:[`${process.env.NAME_CATEGORY}`, { option: true }],
+  colorBackGroundToExpect:"rgba(0, 0, 0, 0)"
 });
