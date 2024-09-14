@@ -45,6 +45,12 @@ test.use({video: 'on'});
             await uILogin.fillUserPassword(password)
             await expect(uILogin.userPasswordLocator).toHaveValue(password)
           })
+          await test.step('Remember me step',async()=>{
+            const rememberMe = page.locator('div').filter({ hasText: /^Recordarme$/ })
+            await rememberMe.click();
+            const inputRadio= page.locator('.custom-control-input');
+            await expect(inputRadio).toHaveCSS('background-color',"rgba(0, 0, 0, 0)")
+          })
           await test.step('Click on the authenticate button', async()=>{
             await uILogin.clickOnAuthenticateButtonAndCheckAPINetworkResponses();
           })
@@ -108,7 +114,6 @@ test.use({video: 'on'});
           await test.step('Select the father category', async()=>{
             await page.locator('div').filter({ hasText: /^Seleccione la categoría padre$/ }).nth(2).click();
             await page.getByRole('option').first().click();//Explicar porque se elige el primer input no mas 
-  
           });
           await test.step('save the category', async()=>{
             await uICategories.clickAcceptCategory()
