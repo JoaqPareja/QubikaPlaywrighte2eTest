@@ -13,5 +13,5 @@ npx playwright test qubika.spec
 To run the test in headed mode, e.g:with the browser open.
 npx playwright test qubika.spec --headed
 
-To debug the test
+To debug the test file
 npx playwright test qubika.spec --debug

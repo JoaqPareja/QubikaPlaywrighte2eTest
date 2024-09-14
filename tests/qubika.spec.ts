@@ -91,8 +91,6 @@ test.use({video: 'on'});
           });
   
         })
-        await page.pause()
-
         await test.step('create a sub category page', async()=>{
           await test.step('click Add a Category', async()=>{
             await uICategories.clickAddCategory();
@@ -105,7 +103,7 @@ test.use({video: 'on'});
           await test.step('click on the subcategory option', async()=>{
             await page.locator('label').filter({ hasText: 'Es subcategoria?' }).click();
             const subcategoryRadioInput= page.locator('#customCheckMain')
-            expect(subcategoryRadioInput).toHaveCSS('background','black')
+            await expect(subcategoryRadioInput).toHaveCSS('background-color',"rgba(0, 0, 0, 0)")
           });
           await test.step('Select the father category', async()=>{
             await page.locator('div').filter({ hasText: /^Seleccione la categoría padre$/ }).nth(2).click();
