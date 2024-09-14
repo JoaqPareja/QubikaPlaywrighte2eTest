@@ -47,24 +47,23 @@ test.use({video: 'on'});
             expect(apiLoginResponeJson.id).not.toBeNull();
             expect(apiLoginResponeJson.name).not.toBeNull();
             expect(apiLoginResponeJson.parentId).toBeNull();
-            const categoryCreatedFromAPILevel=apiLoginResponeJson.id
+            process.env.FATHER_CATEGORY_ID_FROM_API=apiLoginResponeJson.id
             await test.step('Check that the category has been created', async ()=>{
-              const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,categoryCreatedFromAPILevel)
+              const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
               const getCategoryByIDReponseJson = await getCategoryByIDReponse.json()
               expect(getCategoryByIDReponse.ok()).toBeTruthy();
               expect(getCategoryByIDReponse.status()).toBe(200)
               expect(getCategoryByIDReponseJson.name).toEqual(nameCategory)
-              await page.pause();
             })
           })
           await test.step('Create a Sub category', async ()=>{
-            const apiLoginResponse= await aPICategories.createACategory(`${process.env.ID_TOKEN}`,nameCategory,null)
+            const apiLoginResponse= await aPICategories.createACategory(`${process.env.ID_TOKEN}`,nameCategory,`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
             const apiLoginResponeJson = await apiLoginResponse.json()
             expect(apiLoginResponse.ok()).toBeTruthy();
             expect(apiLoginResponse.status()).toBe(200)
             expect(apiLoginResponeJson.id).not.toBeNull();
             expect(apiLoginResponeJson.name).not.toBeNull();
-            expect(apiLoginResponeJson.parentId).toBeNull();
+            expect(apiLoginResponeJson.parentId).not.toBeNull();
             const categoryCreatedFromAPILevel=apiLoginResponeJson.id
             await test.step('Check that the subcategory category has been created', async ()=>{
               const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,categoryCreatedFromAPILevel)
@@ -72,7 +71,9 @@ test.use({video: 'on'});
               expect(getCategoryByIDReponse.ok()).toBeTruthy();
               expect(getCategoryByIDReponse.status()).toBe(200)
               expect(getCategoryByIDReponseJson.name).toEqual(nameCategory)
-              await page.pause();
+              process.env.SUB_CATEGORY_ID_FROM_API=apiLoginResponeJson.id
+              expect(process.env.SUB_CATEGORY_ID_FROM_API).not.toBeNull();
+              expect(process.env.SUB_CATEGORY_ID_FROM_API).not.toBe(`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
             })
           })
           await page.pause()
