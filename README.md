@@ -1,9 +1,11 @@
-The project consist in testing an internal project of Qubika, both API and UI tests are to be run in just one file as per the requirments.
+The project consist in testing the internal project of Qubika, both API and UI tests are to be run in just one file as per the requirments.
+UI URL:https://api.club-administration.qa.qubika.com/swagger-ui/index.html#/
+Swagger URL:https://club-administration.qa.qubika.com/#/category-type
 
 This project is divided in two parts, in the first part we are doing the tests on the API Level and if those pass we move on to the UI level, in both instances we try to cover as much as tests as possible, we'll see that in the test file all the tests or "sub" tests are divided in steps with this is much more clear to debug the issues found and also is much more clear to view it in the html report after the run.
 Another way to test both API and UI level at the same time, would be to log in with the user in the UI, retrieve the token from the network, then do request to the API and check that after refreshing the newly created object appeared, this is helpful if we need to test the same exact object multiple times, with this we are able to reduce execution time and avoid re testing the UI x number of times.
 
-To install the project just Download the project and install all dependencis with npm i.
+To install the project just Download or clone the project and install all dependencis with npm i.
 
 To run the project we can do either of the use the following commands on the console:
 
