@@ -39,13 +39,21 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { 
+      use: {
+        actionTimeout: process.env.CI?240000: 180000,
+        navigationTimeout: process.env.CI?240000: 180000,
+        expect: process.env.CI ?240000: 180000,
+        // trace: 'on',
+        video: {
+          recordVideo: { dir: 'videos/' }, 
+          mode: 'on',
+          size: { width: 1920, height: 1080 }},
         baseURL:process.env.BASE_URL,
-        actionTimeout: process.env.CI?140000: 120000,
-        navigationTimeout: process.env.CI?140000: 120000,
-        // expect: process.env.CI ?240000: 180000,
-        ...devices['Desktop Chrome']
-       },
+
+        ...devices['Desktop Chrome'],
+        viewport: {  width: 1920, height: 1080} 
+        // Use prepared auth state.
+      },
     },
 
     // {

@@ -3,12 +3,9 @@ import { test } from '../customTypes/user';
 import UILogin from "../POM/UI/login"
 import UISideMenu from "../POM/UI/sideMenu"
 import UICategories from "../POM/UI/categories"
-// test.beforeEach(async ({ page }) => {
-//     await page.goto('/');
-//   });
-  
-  // test.describe('New Todo', async () => {
-    test.setTimeout(140000);
+
+test.use({video: 'on'});
+  test.setTimeout(140000);
 
     test('Qubika test', async ({ page,email,password, emailNotRegistered,passwordNotRegistered,nameCategory}) => {
       const uILogin = new UILogin(page)
@@ -69,7 +66,6 @@ import UICategories from "../POM/UI/categories"
           });
           await test.step('fill a Name category', async()=>{
             await uICategories.fillNameCategory(nameCategory)
-            await page.pause()
             await expect(uICategories.nameCategory).toHaveValue(nameCategory)
           });
           await test.step('Try saving the category', async()=>{
@@ -89,11 +85,40 @@ import UICategories from "../POM/UI/categories"
           });
           await test.step('save the category', async()=>{
             await uICategories.clickAcceptCategory()
+            await expect(uICategories.addCategoryModal).toBeHidden();
+            await expect(uICategories.categoryTypeAddedPopUP).toBeVisible();  
+            
+          });
+  
+        })
+        await page.pause()
+
+        await test.step('create a sub category page', async()=>{
+          await test.step('click Add a Category', async()=>{
+            await uICategories.clickAddCategory();
+            await expect(uICategories.addCategoryTypeHeader).toBeVisible();
+          });
+          await test.step('fill a Name category', async()=>{
+            await uICategories.fillNameCategory(nameCategory)
+            await expect(uICategories.nameCategory).toHaveValue(nameCategory);  
+          });
+          await test.step('click on the subcategory option', async()=>{
+            await page.locator('label').filter({ hasText: 'Es subcategoria?' }).click();
+            const subcategoryRadioInput= page.locator('#customCheckMain')
+            expect(subcategoryRadioInput).toHaveCSS('background','black')
+          });
+          await test.step('Select the father category', async()=>{
+            await page.locator('div').filter({ hasText: /^Seleccione la categoría padre$/ }).nth(2).click();
+            await page.getByRole('option').first().click();//Explicar porque se elige el primer input no mas 
+  
+          });
+          await test.step('save the category', async()=>{
+            await uICategories.clickAcceptCategory()
+            await expect(uICategories.addCategoryModal).toBeHidden();
             await expect(uICategories.categoryTypeAddedPopUP).toBeVisible();  
           });
-        })
-        await test.step('create a sub category page', async()=>{
-        
+          
+
         })
 
         await page.pause()
