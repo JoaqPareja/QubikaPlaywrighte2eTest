@@ -12,6 +12,10 @@ test.use({video: 'on'});
       const uISideMenu =new UISideMenu(page)
       const uICategories =new UICategories(page)
       await test.step('API test', async ()=>{
+          
+        await test.step('Check that we can not log in with a wrong email a password', async ()=>{
+
+        });
       })
       await test.step('UI test', async ()=>{
         await test.step('get to the Log in page and check that we landed in the right page', async ()=>{
@@ -20,7 +24,7 @@ test.use({video: 'on'});
           await expect(page).toHaveURL(/.login/)
           await page.waitForTimeout(300);
         })
-        await test.step('Type incorrect email and password', async()=>{
+        await test.step('Check message for an incorrect email and password', async()=>{
           await test.step('type Incorrectly user email', async ()=>{
             await uILogin.fillUserName(emailNotRegistered)
             await uILogin.jumpToPasswordFromUserName();
@@ -122,11 +126,6 @@ test.use({video: 'on'});
 
         })
 
-        // await page.pause()
-
-
-      //   await test.step('Check that we landed on the Log in page', async ()=>{
-      //  })
       })
 
 
