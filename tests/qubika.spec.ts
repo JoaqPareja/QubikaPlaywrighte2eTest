@@ -8,7 +8,7 @@ import APICategories from "../POM/API/categories"
 import APIRegister from "../POM/API/register"
 import {registerANewUser} from "../helpers/registerANewUser"
 test.use({video: 'on'});
-  test.setTimeout(140000);
+test.setTimeout(140000);
 
     test('Qubika test', async ({ page,email,userName,password, emailNotRegistered,passwordNotRegistered,nameCategory,colorBackGroundToExpect}) => {
       const uILogin = new UILogin(page)
@@ -78,11 +78,11 @@ test.use({video: 'on'});
               expect(process.env.SUB_CATEGORY_ID_FROM_API).not.toBe(`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
             })
           })
-          await test.step('delete sub Category', async ()=>{
+          await test.step('Delete sub Category', async ()=>{
            const deleteSubCategory= await aPICategories.deleteCategory(`${process.env.ID_TOKEN}`,`${process.env.SUB_CATEGORY_ID_FROM_API}`)
            expect(deleteSubCategory.ok()).toBeTruthy();
            expect(deleteSubCategory.status()).toBe(200);
-           await test.step('check that the sub Category no longer exist', async ()=>{
+           await test.step('Check that the sub Category no longer exist', async ()=>{
               const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,`${process.env.SUB_CATEGORY_ID_FROM_API}`)
               expect(getCategoryByIDReponse.status()).toBe(404);
             });
@@ -92,11 +92,11 @@ test.use({video: 'on'});
               expect(getCategoryByIDReponse.status()).toBe(200);
             })
           });
-          await test.step('delete Category', async ()=>{
+          await test.step('Delete Category', async ()=>{
             const deleteFatherCategory= await aPICategories.deleteCategory(`${process.env.ID_TOKEN}`,`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
             expect(deleteFatherCategory.ok()).toBeTruthy();
             expect(deleteFatherCategory.status()).toBe(200);
-            await test.step('check the Category no longer exist', async ()=>{
+            await test.step('Check the Category no longer exist', async ()=>{
               const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
               expect(getCategoryByIDReponse.status()).toBe(404);
             });
@@ -108,7 +108,7 @@ test.use({video: 'on'});
       })
       await test.step('UI test', async ()=>{
 
-        await test.step('get to the Log in page and check that we landed in the right page', async ()=>{
+        await test.step('Get to the Log in page and check that we landed in the right page', async ()=>{
           await page.goto('/');
           await expect(page).toHaveURL(/.*club-administration.qa.qubika.com/)
           await expect(page).toHaveURL(/.login/)
@@ -116,11 +116,11 @@ test.use({video: 'on'});
         })
 
         await test.step('Check message for an incorrect email and password', async()=>{
-          await test.step('type Incorrectly user email', async ()=>{
+          await test.step('Type Incorrectly user email', async ()=>{
             await uILogin.fillUserName(emailNotRegistered)
             await uILogin.jumpToPasswordFromUserName();
           })
-          await test.step('type user password', async ()=>{
+          await test.step('Type user password', async ()=>{
             await uILogin.fillUserPassword(passwordNotRegistered)
           })
           await test.step('Click on the authenticate button', async()=>{
@@ -130,20 +130,20 @@ test.use({video: 'on'});
             await expect(uILogin.popUpWrongUsernameOrPasswrod).toBeVisible();
           })
         })
-        await test.step('Register user and log in the UI', async ()=>{
-          await test.step('create a user from the API Level and check it can log in in the UI', async ()=>{
+        await test.step('Register the user on the API level and check we can log in the UI', async ()=>{
+          await test.step('Create the user on the API level', async ()=>{
             const apareRegisterUser= await aPIRegister.registerUSer(await registerANewUser() ,passwordNotRegistered)
             const getCategoryByIDReponseJson = await apareRegisterUser.json()
             expect(apareRegisterUser.ok()).toBeTruthy();
             expect(apareRegisterUser.status()).toBe(201)
             expect(getCategoryByIDReponseJson.email).toEqual(process.env.NEWUSER)
           })
-          await test.step('type user email', async ()=>{
+          await test.step('Type user email', async ()=>{
             await uILogin.fillUserName(`${process.env.NEWUSER}`)
             await expect(uILogin.userEmailLocator).toHaveValue(`${process.env.NEWUSER}`) // Why toHaveValue instead of toHaveText ? because the input saves it as value and not as as text
             await uILogin.jumpToPasswordFromUserName();
           })
-          await test.step('type user password', async ()=>{
+          await test.step('Type user password', async ()=>{
             await uILogin.fillUserPassword(passwordNotRegistered)
             await expect(uILogin.userPasswordLocator).toHaveValue(passwordNotRegistered)
           })
@@ -169,12 +169,12 @@ test.use({video: 'on'});
         })
 
         await test.step('Log in with Qubika Admin User', async()=>{
-          await test.step('type user email', async ()=>{
+          await test.step('Type user email', async ()=>{
             await uILogin.fillUserName(email)
             await expect(uILogin.userEmailLocator).toHaveValue(email) // Why toHaveValue instead of toHaveText ? because the input saves it as value and not as as text
             await uILogin.jumpToPasswordFromUserName();
           })
-          await test.step('type user password', async ()=>{
+          await test.step('Type user password', async ()=>{
             await uILogin.fillUserPassword(password)
             await expect(uILogin.userPasswordLocator).toHaveValue(password)
           })
@@ -197,16 +197,16 @@ test.use({video: 'on'});
             await page.waitForTimeout(300);//emulate user behavior
           });
       });
-        await test.step('get to categories', async()=>{
+        await test.step('Get to categories', async()=>{
           await uISideMenu.clickCategoriesTypes();
           await expect(uICategories.categoriesTypesHeader).toBeVisible();
         })
-        await test.step('cancel creating a category', async()=>{
+        await test.step('Cancel creating a category', async()=>{
           await test.step('click Add a Category', async()=>{
             await uICategories.clickAddCategory();
             await expect(uICategories.addCategoryTypeHeader).toBeVisible();
           });
-          await test.step('fill a Name category', async()=>{
+          await test.step('Fill a Name category', async()=>{
             await uICategories.fillNameCategory(nameCategory)
             await expect(uICategories.nameCategory).toHaveValue(nameCategory)
           });
@@ -216,16 +216,16 @@ test.use({video: 'on'});
             await expect(uICategories.categoryTypeAddedPopUP).toBeHidden();  
           });
         })
-        await test.step('create a category page', async()=>{
-          await test.step('click Add a Category', async()=>{
+        await test.step('Create a category page', async()=>{
+          await test.step('Click Add a Category', async()=>{
             await uICategories.clickAddCategory();
             await expect(uICategories.addCategoryTypeHeader).toBeVisible();
           });
-          await test.step('fill a Name category', async()=>{
+          await test.step('Fill a Name category', async()=>{
             await uICategories.fillNameCategory(nameCategory)
             await expect(uICategories.nameCategory).toHaveValue(nameCategory);  
           });
-          await test.step('save the category', async()=>{
+          await test.step('Save the category', async()=>{
             await uICategories.clickAcceptCategory()
             await expect(uICategories.addCategoryModal).toBeHidden();
             await expect(uICategories.categoryTypeAddedPopUP).toBeVisible();  
@@ -233,16 +233,16 @@ test.use({video: 'on'});
           });
   
         })
-        await test.step('create a sub category page', async()=>{
-          await test.step('click Add a Category', async()=>{
+        await test.step('Create a sub category page', async()=>{
+          await test.step('Click Add a Category', async()=>{
             await uICategories.clickAddCategory();
             await expect(uICategories.addCategoryTypeHeader).toBeVisible();
           });
-          await test.step('fill a Name category', async()=>{
+          await test.step('Fill a Name category', async()=>{
             await uICategories.fillNameCategory(nameCategory)
             await expect(uICategories.nameCategory).toHaveValue(nameCategory);  
           });
-          await test.step('click on the subcategory option', async()=>{
+          await test.step('Click on the subcategory option', async()=>{
             await uICategories.clickIsItASubcategoryButton()
             await expect(uICategories.subcategoryRadioInput).toHaveCSS('background-color',colorBackGroundToExpect)
           });
@@ -250,7 +250,7 @@ test.use({video: 'on'});
             await uICategories.clickSelectFatherCategory()
             await uICategories.clickOnFirstCategoryOption();//Here we will be clicking on the first category as there is no option in the app to look for the one recently created
           });
-          await test.step('save the category', async()=>{
+          await test.step('Save the category', async()=>{
             await uICategories.clickAcceptCategory()
             await expect(uICategories.addCategoryModal).toBeHidden();
             await expect(uICategories.categoryTypeAddedPopUP).toBeVisible();  
