@@ -28,7 +28,7 @@ CI/CD part:
 
 The CI/CD for this project works on github actions, so when ever there's a push or pull request to the master branch the tests will be launched.
 
-If that current version of the enviroment that we are testing failed the job will failed if it pass we will be able to see it with a green stick and to download the html report in the artifcat section of the job.
+If that current version of the enviroment that we are testing failed the job will failed and if it pass we will be able to see it with a green stick and to download the html report in the artifact section of the job that run.
 
 API Comments:
 From the API level there's almost no restriction to test the Application.
