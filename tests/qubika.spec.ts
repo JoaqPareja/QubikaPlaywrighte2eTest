@@ -3,19 +3,83 @@ import { test } from '../customTypes/testData';
 import UILogin from "../POM/UI/login"
 import UISideMenu from "../POM/UI/sideMenu"
 import UICategories from "../POM/UI/categories"
+import APILogin from "../POM/API/login"
+import APICategories from "../POM/API/categories"
 
 test.use({video: 'on'});
   test.setTimeout(140000);
 
-    test('Qubika test', async ({ page,email,password, emailNotRegistered,passwordNotRegistered,nameCategory,colorBackGroundToExpect}) => {
+    test('Qubika test', async ({ page,email,userName,password, emailNotRegistered,passwordNotRegistered,nameCategory,colorBackGroundToExpect}) => {
       const uILogin = new UILogin(page)
       const uISideMenu =new UISideMenu(page)
-      const uICategories =new UICategories(page)
+      const uICategories =new UICategories(page);
+      const aPILogin= new APILogin(page)
+      const aPICategories= new APICategories(page)
       await test.step('API test', async ()=>{
           
         await test.step('Check that we can not log in with a wrong email a password', async ()=>{
+          const apiLoginResponse= await aPILogin.logToTheWebSite(email,password)
+          const apiLoginResponeJson = await apiLoginResponse.json()
+          expect(apiLoginResponse.ok()).toBeTruthy();
+          expect(apiLoginResponse.status()).toBe(200)
+          process.env.ID_TOKEN =await apiLoginResponeJson.token//Get the Auth token and create an enviroment variable to be able to re use it
+        });
+        await test.step('Check that we can retrive the user information', async ()=>{
+          const apiLoginResponse= await aPILogin.getUserAccountInformation(`${process.env.ID_TOKEN}`)
+          const apiLoginResponeJson = await apiLoginResponse.json()
+          expect(apiLoginResponse.ok()).toBeTruthy();
+          expect(apiLoginResponse.status()).toBe(200)
+          expect(await apiLoginResponeJson.username).toEqual(userName);
+          expect(await apiLoginResponeJson.email).toEqual(email);
+          expect(await apiLoginResponeJson.roles[0]).toEqual('ROLE_ADMIN');
+        });
+        await test.step('Get to the categories and create one', async ()=>{
+          await test.step('Check that we are able to check categories before creating one', async ()=>{
+            const apiLoginResponse= await aPICategories.getCategories(`${process.env.ID_TOKEN}`)
+            expect(apiLoginResponse.ok()).toBeTruthy();
+            expect(apiLoginResponse.status()).toBe(200)
+          })
+          await test.step('Create a category', async ()=>{
+            const apiLoginResponse= await aPICategories.createACategory(`${process.env.ID_TOKEN}`,nameCategory,null)
+            const apiLoginResponeJson = await apiLoginResponse.json()
+            expect(apiLoginResponse.ok()).toBeTruthy();
+            expect(apiLoginResponse.status()).toBe(200)
+            expect(apiLoginResponeJson.id).not.toBeNull();
+            expect(apiLoginResponeJson.name).not.toBeNull();
+            expect(apiLoginResponeJson.parentId).toBeNull();
+            const categoryCreatedFromAPILevel=apiLoginResponeJson.id
+            await test.step('Check that the category has been created', async ()=>{
+              const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,categoryCreatedFromAPILevel)
+              const getCategoryByIDReponseJson = await getCategoryByIDReponse.json()
+              expect(getCategoryByIDReponse.ok()).toBeTruthy();
+              expect(getCategoryByIDReponse.status()).toBe(200)
+              expect(getCategoryByIDReponseJson.name).toEqual(nameCategory)
+              await page.pause();
+            })
+          })
+          await test.step('Create a Sub category', async ()=>{
+            const apiLoginResponse= await aPICategories.createACategory(`${process.env.ID_TOKEN}`,nameCategory,null)
+            const apiLoginResponeJson = await apiLoginResponse.json()
+            expect(apiLoginResponse.ok()).toBeTruthy();
+            expect(apiLoginResponse.status()).toBe(200)
+            expect(apiLoginResponeJson.id).not.toBeNull();
+            expect(apiLoginResponeJson.name).not.toBeNull();
+            expect(apiLoginResponeJson.parentId).toBeNull();
+            const categoryCreatedFromAPILevel=apiLoginResponeJson.id
+            await test.step('Check that the subcategory category has been created', async ()=>{
+              const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,categoryCreatedFromAPILevel)
+              const getCategoryByIDReponseJson = await getCategoryByIDReponse.json()
+              expect(getCategoryByIDReponse.ok()).toBeTruthy();
+              expect(getCategoryByIDReponse.status()).toBe(200)
+              expect(getCategoryByIDReponseJson.name).toEqual(nameCategory)
+              await page.pause();
+            })
+          })
+          await page.pause()
+
 
         });
+        
       })
       await test.step('UI test', async ()=>{
         await test.step('get to the Log in page and check that we landed in the right page', async ()=>{
