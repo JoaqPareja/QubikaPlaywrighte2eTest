@@ -1,4 +1,5 @@
 The project consist in testing the internal project of Qubika, both API and UI tests are to be run in just one file as per the requirments.
+
 UI URL:https://api.club-administration.qa.qubika.com/swagger-ui/index.html#/
 Swagger URL:https://club-administration.qa.qubika.com/#/category-type
 
