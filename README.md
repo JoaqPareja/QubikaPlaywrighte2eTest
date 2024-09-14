@@ -20,4 +20,8 @@ To open UI mode, run the following command in your terminal:
 
 npx playwright test qubika.spec --ui
 
-This project is divided in two parts, in the first part we are doing the tests on the API Level and if those pass we move on to the UI level, another way to test both API and UI level at the same time, would be to log in with the user in the UI, retrieve the token from the network, then do request to the API and check that after refreshing the newly created object appeared, this is helpful if we need to test the same exact object multiple times, with this we are able to reduce execution time and avoid re testing the UI x number of time.s
+This project is divided in two parts, in the first part we are doing the tests on the API Level and if those pass we move on to the UI level, another way to test both API and UI level at the same time, would be to log in with the user in the UI, retrieve the token from the network, then do request to the API and check that after refreshing the newly created object appeared, this is helpful if we need to test the same exact object multiple times, with this we are able to reduce execution time and avoid re testing the UI x number of times
+
+CI/CD part:
+
+The CI/CD for this project works on github actions, so when ever there's a push or pull request to the master branch the tests will be launched.
