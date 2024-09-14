@@ -5,6 +5,11 @@ Swagger URL:https://club-administration.qa.qubika.com/#/category-type
 This project is divided in two parts, in the first part we are doing the tests on the API Level and if those pass we move on to the UI level, in both instances we try to cover as much as tests as possible, we'll see that in the test file all the tests or "sub" tests are divided in steps with this is much more clear to debug the issues found and also is much more clear to view it in the html report after the run.
 Another way to test both API and UI level at the same time, would be to log in with the user in the UI, retrieve the token from the network, then do request to the API and check that after refreshing the newly created object appeared, this is helpful if we need to test the same exact object multiple times, with this we are able to reduce execution time and avoid re testing the UI x number of times.
 
+Structure:
+The project consist of a Page Object Model structurePage, also known as POM, is a design pattern in Selenium that creates an object repository for storing all web elements and on this occasion all api endpoints as well, s a design pattern widely used in test automation to enhance automated test scripts maintainability, scalability, and reusability. It promotes a structured approach to organizing code and makes it easy to manage and update test cases as the application evolves.
+Then what we only need to do is to call the functions in the tests part and assert that the action was succesfull or not.
+
+Install instractions:
 To install the project just Download or clone the project and install all dependencis with npm i.
 
 To run the project we can do either of the use the following commands on the console:
@@ -24,8 +29,7 @@ npx playwright test qubika.spec --debug
 To open UI mode, run the following command in your terminal:
 npx playwright test qubika.spec --ui
 
-CI/CD part:
-
+CI/CD:
 The CI/CD for this project works on github actions, so when ever there's a push or pull request to the master branch the tests will be launched.
 
 If that current version of the enviroment that we are testing failed the job will failed and if it pass we will be able to see it with a green stick and to download the html report in the artifact section of the job that run.
