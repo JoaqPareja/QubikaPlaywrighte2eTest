@@ -48,8 +48,18 @@ export default class APICategories{
   await this.page.waitForTimeout(300);
   return TR_BODY_RESPONSE_PROMISE;
     }
+    public async deleteCategory(ID_TOKEN:string,categoryID:string){
+        const context = await request.newContext();
+        const TR_BODY_RESPONSE_PROMISE=
+        await context.delete(`${process.env.API_URL}/category-type/delete/${categoryID}`,
+           { headers: {
+              'Authorization': `Bearer ${ID_TOKEN}`}
+      })
+  
+  await this.page.waitForTimeout(300);
+  return TR_BODY_RESPONSE_PROMISE;
+    }
 
-    // 
-//https://api.club-administration.qa.qubika.com/api
+
    
 }

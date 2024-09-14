@@ -76,8 +76,30 @@ test.use({video: 'on'});
               expect(process.env.SUB_CATEGORY_ID_FROM_API).not.toBe(`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
             })
           })
-          await page.pause()
-
+          await test.step('delete sub Category', async ()=>{
+           const deleteSubCategory= await aPICategories.deleteCategory(`${process.env.ID_TOKEN}`,`${process.env.SUB_CATEGORY_ID_FROM_API}`)
+           expect(deleteSubCategory.ok()).toBeTruthy();
+           expect(deleteSubCategory.status()).toBe(200);
+           await test.step('check that the sub Category no longer exist', async ()=>{
+              const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,`${process.env.SUB_CATEGORY_ID_FROM_API}`)
+              expect(getCategoryByIDReponse.status()).toBe(404);
+            });
+            await test.step('Check that although the sub category has been deleted in the previous step we still have the father category', async ()=>{
+              const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
+              expect(getCategoryByIDReponse.ok()).toBeTruthy();
+              expect(getCategoryByIDReponse.status()).toBe(200);
+            })
+          });
+          await test.step('delete Category', async ()=>{
+            const deleteFatherCategory= await aPICategories.deleteCategory(`${process.env.ID_TOKEN}`,`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
+            expect(deleteFatherCategory.ok()).toBeTruthy();
+            expect(deleteFatherCategory.status()).toBe(200);
+            await test.step('check the Category no longer exist', async ()=>{
+              const getCategoryByIDReponse=await aPICategories.getCategoryByID(`${process.env.ID_TOKEN}`,`${process.env.FATHER_CATEGORY_ID_FROM_API}`)
+              expect(getCategoryByIDReponse.status()).toBe(404);
+            });
+            await page.pause()
+          });
 
         });
         
